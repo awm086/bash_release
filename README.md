@@ -3,7 +3,7 @@ Run tasks thru Drush commands.
 Examples:
   bash trigger -t releases -r 0001           Runs the release 0001 tasks.
 
-Options:
+Options:    
   -t [task]
      The task to be run. e.g. "releases".
 
