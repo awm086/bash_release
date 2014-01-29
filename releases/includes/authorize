@@ -1,0 +1,14 @@
+#!/bin/bash
+#===============================================================================
+#
+#        FILE: authorize
+# DESCRIPTION: performs validations for each release script executed.
+#===============================================================================
+
+# make sure that if script is executed directly, e.g.
+# ./sites/all/scripts/tasks/releases/0018.rse the script does not run.
+if [ -z "$RELEASE" ]; then
+  printf "\033[1;31m[error]\033[0m Executing the releases directly is not allowed.\n"
+  printf "Try executing this instead: ./sites/all/scripts/tasks/trigger -t releases -r update\n\n"
+  exit
+fi

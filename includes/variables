@@ -1,0 +1,13 @@
+#!/bin/bash
+#===============================================================================
+#
+#        FILE: variables
+#       USAGE: include file from trigger.
+# DESCRIPTION: sets reusable variables to be used with release tasks bash
+#              scripts.
+#===============================================================================
+
+CONF='-y'
+VGET_RELEASE='bash_release'
+DRUSH="../drush/drush"
+CONFIG="--config=sites/all/drush/drushrc.php"

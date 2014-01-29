@@ -1,0 +1,31 @@
+#!/bin/bash
+#===============================================================================
+#
+#        FILE: .rse
+# DESCRIPTION: release instructions.
+#===============================================================================
+
+source sites/all/scripts/tasks/releases/includes/source
+declare -a ARRAY_CMDS_START=(); rse_start
+declare -a ARRAY_CMDS=(
+
+
+
+#-------------------------------------------------------------------------------
+#  enable core modules
+#-------------------------------------------------------------------------------
+"$DRUSH cc all $CONF"
+"$DRUSH cc all $CONF"
+
+#-------------------------------------------------------------------------------
+#  IMPORTANT! DO NOT REMOVE COMMAND
+#  stores the release number for future validation. this should be the last
+#  command ran.
+#-------------------------------------------------------------------------------
+"$DRUSH vset bash_release $RELEASE --always-set"
+
+);
+
+declare -a ARRAY_CMDS_END=(); rse_end
+ARRAY_CMDS_MERGE=("${ARRAY_CMDS_START[@]}" "${ARRAY_CMDS[@]}" "${ARRAY_CMDS_END[@]}")
+exec_cmds ARRAY_CMDS_MERGE

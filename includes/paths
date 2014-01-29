@@ -1,0 +1,14 @@
+#!/bin/bash
+#===============================================================================
+#
+#        FILE: paths
+# DESCRIPTION: sets all the paths needed to run a release task bash script.
+#===============================================================================
+
+TASKS_PATH="sites/all/scripts/tasks"
+
+DRUSH_PATH="sites/all/drush"
+
+BIN_DATA_PATH="sites/all/data"
+
+FILES_PATH="files"

@@ -1,0 +1,126 @@
+#!/bin/bash
+#===============================================================================
+#
+#        FILE: methods
+#       USAGE: include file from releases.
+# DESCRIPTION: sets reusable methods to be used with release tasks bash scripts.
+#===============================================================================
+
+SUCCESS_COUNT=0
+NOTICE_COUNT=0
+WARNING_COUNT=0
+ERROR_COUNT=0
+
+SUCCESS_TEXT="\033[1;32m[success]\033[0m"
+NOTICE_TEXT="\033[1;36m[notice]\033[0m"
+WARNING_TEXT="\033[1;33m[warning]\033[0m"
+ERROR_TEXT="\033[1;31m[error]\033[0m"
+
+function exec_cmds() {
+  #-------------------------------------------------------------------------------
+  #  IMPORTANT! DO NOT ALTER
+  #-------------------------------------------------------------------------------
+
+  for (( i = 0 ; i < ${#ARRAY_CMDS_MERGE[@]} ; i++ )); do
+    printf "\n\033[1;37mRunning: ${ARRAY_CMDS_MERGE[$i]}\033[0m"
+    CMD_OUTPUT=$( ${ARRAY_CMDS_MERGE[$i]} 2>&1)
+    validate $CMD_OUTPUT
+  done
+
+  printf "\n\033[1;32mSuccess:\033[0m $SUCCESS_COUNT \t \033[1;36mNotices:\033[0m $NOTICE_COUNT \t \033[1;33mWarnings:\033[0m $WARNING_COUNT \t \033[1;31mErrors\033[0m $ERROR_COUNT\n"
+}
+
+
+function validate() {
+
+  COLS=$(tput cols)
+  let COLS=COLS+9
+
+  SEVERITY_LEVELS=("SUCCESS" "NOTICE" "WARNING" "ERROR");
+
+  # success
+  SUCCESS=(
+    "Tracing dependencies for: iv/ui/main"
+  )
+
+  SUCCESS_MESSAGE=(
+    "Java compiler has run successfully"
+  )
+
+  # notices
+  NOTICE=(
+    "..."
+  )
+
+  NOTICE_MESSAGE=(
+    "..."
+  )
+
+  # warnings
+  WARNING=(
+    "WD php: PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'module' cannot be null: INSERT INTO {role_permission} (rid, permission, module) VALUES (:db_insert_placeholder_0, :db_insert_placeholder_1, :db_insert_placeholder_2); Array"
+    "WD php: PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'module'"
+    "Invalid argument supplied for foreach() field.drush.inc:215"
+  )
+
+  WARNING_MESSAGE=(
+    "There's an extra permission that should not be there. Check the logs."
+    "There's an extra permission that should not be there. Check the logs."
+    "Trying to delete a field that does not exist."
+  )
+
+  # errors
+  ERROR=(
+    "..."
+  )
+
+  ERROR_MESSAGE=(
+    "..."
+  )
+
+  for (( a = 0 ; a < ${#WARNING[@]} ; a++ )); do
+    if [[ $CMD_OUTPUT == *"${WARNING[$a]}"* ]]; then
+      let COLS=COLS-${#WARNING_MESSAGE[$a]}
+      printf "\n%0s%${COLS}b\n" "${WARNING_MESSAGE[$a]}" "$WARNING_TEXT"
+      let WARNING_COUNT=WARNING_COUNT+1
+      return
+    fi
+  done
+
+  for (( a = 0 ; a < ${#NOTICE[@]} ; a++ )); do
+    if [[ $CMD_OUTPUT == *"${NOTICE[$a]}"* ]]; then
+      let COLS=COLS-${#WARNING_MESSAGE[$a]}
+      printf "\n${NOTICE_MESSAGE[$a]}\n"
+      let NOTICE_COUNT=NOTICE_COUNT+1
+      return
+    fi
+  done
+
+  for (( a = 0 ; a < ${#ERROR[@]} ; a++ )); do
+    if [[ $CMD_OUTPUT == *"${ERROR[$a]}"* ]]; then
+      let COLS=COLS-${#WARNING_MESSAGE[$a]}
+      printf "\n${ERROR_MESSAGE[$a]}\n"
+      let ERROR_COUNT=ERROR_COUNT+1
+      return
+    fi
+  done
+
+  for (( a = 0 ; a < ${#SUCCESS[@]} ; a++ )); do
+    if [[ $CMD_OUTPUT == *"${SUCCESS[$a]}"* ]]; then
+      let COLS=COLS-${#SUCCESS_MESSAGE[$a]}
+      printf "\n%0s%${COLS}b\n" "${SUCCESS_MESSAGE[$a]}" "$SUCCESS_TEXT"
+      let SUCCESS_COUNT=SUCCESS_COUNT+1
+      return
+    fi
+  done
+
+  if [[ -z "$CMD_OUTPUT" ]]; then
+    MSG="Finished command with no errors."
+    let COLS=COLS-${#MSG}
+    printf "\n%0s%${COLS}b\n" "$MSG" "$SUCCESS_TEXT"
+  else
+    printf "\n$CMD_OUTPUT\n"
+  fi
+
+  let SUCCESS_COUNT=SUCCESS_COUNT+1
+}

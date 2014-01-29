@@ -1,0 +1,49 @@
+=======================
+HELP: INSTALLATION TASK
+=======================
+
+Options:
+  -t <task>
+     The task to be run, in this case we want to run the installation task so set it to "install".
+
+  -u <db username>
+     The database user assigned the rights to use the database. Depends on -t <task> to be set to "install".
+
+  -p <db password>
+     The password associated with the database user. Depends on -t <task> to be set to "install".
+
+  -n <db name>
+     The database name you want to create or re-use. Depends on -t <task> to be set to "install".
+     NOTE: If you type the name of an existing database, keep in mind that the
+           installation process will drop that database and re-create it.
+
+  -h <help>
+     Provides a list of supported options. Depends on -t <task> to be set to "install".
+
+Examples:
+
+  case: Install the database with name "forumsdb".
+  ./sites/all/scripts/tasks/trigger -t install -u root -p rootpass -n forumsdb
+
+  case: Get installation task help.
+  ./sites/all/scripts/tasks/trigger -t install -h
+
+Troubleshooting:
+
+  case: MAMP related DB connection refused.
+
+  error:
+  WD php: Warning: PDO::__construct(): [2002] Connection refused (trying to connect via tcp://127.0.0.1:3306) in DatabaseConnection->__construct() (line 304 of /Users/diego/NYC/dev/workspace/jailhouse/includes/database/database.inc). [warning]
+  WD php: Exception: In order for Drupal to work, and to continue with the installation process, you must resolve all issues reported below. For more help with configuring your database server, see the installation handbook. If you   [error]
+  are unsure what any of this means you should probably contact your hosting provider.Failed to connect to your database server. The server reports the following message: SQLSTATE[HY000] [2002] Connection refused.Is the database
+  server running?Does the database exist, and have you entered the correct database name?Have you entered the correct username and password?Have you entered the correct database hostname? in install_run_task() (line 417 of
+  /Users/diego/NYC/dev/workspace/jailhouse/includes/install.core.inc).
+  WD php: Warning: Cannot modify header information - headers already sent by (output started at /Users/diego/NYC/dev/workspace/jailhouse/sites/all/scripts/drush/includes/output.inc:37) in drupal_send_headers() (line 1239 of          [warning]
+  /Users/diego/NYC/dev/workspace/jailhouse/includes/bootstrap.inc).
+  Exception: <p>In order for Drupal to work, and to continue with the installation process, you must resolve all issues reported below. For more help with configuring your database server, see the <a href="http://drupal.org/getting-started/install">installation handbook</a>. If you are unsure what any of this means you should probably contact your hosting provider.</p><p class="error">Failed to connect to your database server. The server reports the following message: <em>SQLSTATE[HY000] [2002] Connection refused</em>.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul></p> in install_run_task() (line 417 of /Users/diego/NYC/dev/workspace/jailhouse/includes/install.core.inc).
+  Drush command terminated abnormally due to an unrecoverable error.
+
+  solution:
+  sudo mkdir /var/mysql
+  sudo ln -s /Applications/MAMP/tmp/mysql/mysql.sock /var/mysql/mysql.sock                                                                                                                                                                    [error]
+

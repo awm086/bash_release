@@ -1,0 +1,49 @@
+#!/bin/bash
+#===============================================================================
+#
+#        FILE: commands
+# DESCRIPTION: methods defining instructions to be executed during releases.
+#===============================================================================
+
+
+#-------------------------------------------------------------------------------
+# IMPORTANT! DO NOT REMOVE COMMANDS
+# this commands should be run at the beginning of every release.
+#-------------------------------------------------------------------------------
+function rse_start() {
+
+  ARRAY_CMDS_START=(
+
+    "$DRUSH cache-clear drush $CONF"
+
+  );
+
+}
+
+
+
+#-------------------------------------------------------------------------------
+#  IMPORTANT! DO NOT REMOVE COMMAND BELOW
+#  these are the last commands that should be run after the last release has
+#  has been executed, whether in sequence or individually.
+#-------------------------------------------------------------------------------
+function rse_end() {
+
+  if [ -n "$LAST_RELEASE" ] ; then
+
+    dir_git_hooks=".git/hooks"
+    if [ -d $dir_git_hooks ]; then
+
+      ARRAY_DIR_GIT_HOOKS=(
+        #  Make sure all devs are pointing to all git hooks.
+        "rm -rf .git/hooks"
+        "ln -s ../sites/all/scripts/git/hooks/ .git/hooks"
+      )
+
+    fi
+
+    ARRAY_CMDS_END=("${ARRAY_DIR_GIT_HOOKS[@]}")
+
+  fi
+
+}

@@ -1,0 +1,14 @@
+#!/bin/bash
+#===============================================================================
+#
+#        FILE: source
+# DESCRIPTION: release sources.
+#===============================================================================
+
+source sites/all/scripts/tasks/includes/paths
+
+source $TASKS_PATH/includes/variables
+source $TASKS_PATH/releases/includes/load
+source $TASKS_PATH/releases/includes/authorize
+source $TASKS_PATH/releases/includes/methods
+source $TASKS_PATH/releases/includes/commands

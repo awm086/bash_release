@@ -1,0 +1,49 @@
+#-------------------------------------------------------------------------------
+#  getopts
+#-------------------------------------------------------------------------------
+
+while getopts ":r:l:" GET_RELEASE
+do
+  case $GET_RELEASE in
+    r)
+      RELEASE=$OPTARG
+      RELEASE_NORM=`expr $RELEASE + 0`
+
+      if [ $RELEASE_NORM -ne 1 ]; then
+
+        VGET=`$DRUSH vget $VGET_RELEASE`
+        CURRENT_RELEASE=`echo ${VGET//[^0-9]/}`
+
+        # check if this release has already been run.
+        if [ "$RELEASE_NORM" == "$CURRENT_RELEASE" ]; then
+          read -p "NOTICE: Release $RELEASE was the last release ran. Would you like to re-run it? " -n 1
+          if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo; exit 1
+          fi
+        elif [ "$RELEASE_NORM" -lt "$CURRENT_RELEASE" ]; then
+          # this should not be allowed under any circumstances. to re-run a release
+          # it is safer to just create a new set of release instructions.
+          echo -e "\033[33mWARNING:\033[0m Running a release less than the current release \"$CURRENT_RELEASE\" is not allowed. Please create a new release instruction."
+          exit 1
+        fi
+
+      else
+
+        read -p "NOTICE: Re-running $RELEASE will drop your existing installation, if any. Force installation be run again. Would you like to re-run it? " -n 1
+
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+          echo; exit 1
+        fi
+
+      fi
+      ;;
+    l)
+      LAST_RELEASE=$OPTARG
+      ;;
+  esac
+done
+
+echo $(tput bold)$(tput setaf 2)
+echo "-------------------------------------------------------------------------"
+echo "RUNNING RELEASE $RELEASE...";
+echo "-------------------------------------------------------------------------"$(tput sgr0)
